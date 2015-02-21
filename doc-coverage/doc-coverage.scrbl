@@ -95,3 +95,31 @@ module documentation reflection functions.
     (module-documentation-ratio 'racket/match)
 ]}
 
+@section{Testing Module Documentation}
+
+These Rackunit checks allow flexible specification of requirements
+of a modules documentation, including require all exports be documented,
+only specific exports, or that a module overall document a minimum
+percentage of its exports.
+
+@defproc[(check-all-documented [mod symbol?]) void?]{
+  Fails if @racket[mod] does not document all of its exports,
+  listing any undocumented exports in the failure message.
+  @examples[#:eval the-eval
+    (check-all-documented 'racket/base)
+]}
+
+@defproc[(check-documented [mod symbol?] [binding symbol?]) void?]{
+  Fails if @racket[mod] does not provide and document
+  @racket[binding].
+  @examples[#:eval the-eval
+    (check-documented 'racket/list 'second)
+    (check-documented 'racket/match 'match-...-nesting)
+]}
+
+@defproc[(check-documentation-ratio [mod symbol?] [ratio (and/c number? positive-real?)]) void?]{
+  Fails if @racket[mod] does not document at least @racket[ratio]
+  of its provided bindings.
+  @examples[#:eval the-eval
+    (check-documentation-ratio 'racket/match .99)
+]}
