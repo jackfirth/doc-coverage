@@ -4,7 +4,7 @@
           (for-label doc-coverage
                      racket/base))
 
-@title{doc-coverage}
+@title{Documentation Coverage}
 
 @(define the-eval (make-base-eval))
 @(the-eval '(require "main.rkt"))
@@ -20,7 +20,7 @@ this information. This allows a module author to enforce in
 a test suite that their modules provide no undocumented
 bindings.
 
-source code: @url["https://github.com/jackfirth/package-name"]
+source code: @url["https://github.com/jackfirth/doc-coverage"]
 
 @section{Basic Module Documentation Reflection}
 
