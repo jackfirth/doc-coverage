@@ -51,3 +51,5 @@ params:     (racket/match 0.99)
 Module racket/match does not document at least 99.0% of its bindings, only documents 96.42857142857143%
 --------------------
 ```
+
+To install, `run raco pkg install doc-coverage`. Then to use in a module, `(require doc-coverage)`.
