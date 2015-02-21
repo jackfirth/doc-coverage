@@ -19,13 +19,13 @@
   (map first
        (apply append (map (curryr drop 1) exports))))
 
+(define (has-docs? mod binding)
+  (not (not (xref-binding->definition-tag xref (list mod binding) #f))))
+
 (define (module->all-exported-names mod)
   (let-values ([(exp-values exp-syntax) (module->exports mod)])
     (append (phase-exports->names exp-values)
             (phase-exports->names exp-syntax))))
-
-(define (has-docs? mod binding)
-  (not (not (xref-binding->definition-tag xref (list mod binding) #f))))
 
 (define (module->documented-exported-names mod)
   (filter (curry has-docs? mod)
