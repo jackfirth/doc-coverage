@@ -2,7 +2,7 @@ doc-coverage [![Build Status](https://travis-ci.org/jackfirth/doc-coverage.svg)]
 =====================================================
 A Racket package for inspecting and testing the number of documented exports of a module
 
-# Examining module documentation information:
+Examining module documentation information:
 
 ```racket
 > (module->all-exported-names 'racket/promise)
@@ -21,7 +21,7 @@ A Racket package for inspecting and testing the number of documented exports of 
 '(match-...-nesting)
 ```
 
-# Testing module documentation coverage
+Testing module documentation coverage
 
 ```racket
 > (check-all-documented 'racket/base)
