@@ -11,11 +11,18 @@
 (define (fail-check-unless cond msg)
   (unless cond (fail-check msg)))
 
+(module+ test
+  (check-exn exn:test:check?
+             (thunk (fail-check-unless #f "test"))))
+
 (define-check (check-all-documented module-name)
   (let* ([undocumented (module->undocumented-exported-names module-name)]
          [num-undocumented (length undocumented)])
     (fail-check-unless (zero? num-undocumented)
       (check-all-documented-message module-name num-undocumented undocumented))))
+
+(module+ test
+  (check-not-exn (thunk check-all-documented 'racket/promise)))
 
 (define (check-all-documented-message module-name num-undocumented undocumented)
   (string-append "Module "
@@ -34,6 +41,9 @@
 (define-check (check-documented module-name binding)
   (fail-check-unless (has-docs? module-name binding)
     (check-documented-message module-name binding)))
+
+(module+ test
+  (check-not-exn (thunk (check-documented 'racket/match 'match))))
 
 (define (check-documented-message module-name binding)
   (string-append "Module "
