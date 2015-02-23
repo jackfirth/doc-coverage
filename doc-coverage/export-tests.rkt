@@ -11,10 +11,6 @@
 (define (fail-check-unless cond msg)
   (unless cond (fail-check msg)))
 
-(module+ test
-  (check-exn exn:test:check?
-             (thunk (fail-check-unless #f "test"))))
-
 (define-check (check-all-documented module-name)
   (let* ([undocumented (module->undocumented-exported-names module-name)]
          [num-undocumented (length undocumented)])
