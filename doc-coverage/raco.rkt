@@ -5,6 +5,44 @@
          rackunit/docs-complete
          "main.rkt")
 
+; do-ignore! : (U string symbol) regex -> boolean
+(define (do-ignore! mod ignore)
+  (error "Ignore not implemented yet")
+  #f
+  #;(define missing
+    (with-output-to-string
+      (lambda ()
+        (parameterize ([current-error-port (current-output-port)])
+          (check-docs mod #:skip ignore)))))
+  #;(match missing
+    ["" (printf "Module ~a is documented~n" a) #t]
+    [else (printf "Module ~a is missing documentation for ~a~n" a missing) #f]))
+
+; do-binding! : (U string symbol) symbol -> boolean
+(define (do-binding! mod binding)
+  (cond [(set-member? (module->all-exported-names mod) binding)
+         (define b* (has-docs? mod binding))
+         (cond [b* (printf "Module ~a has documentation for ~a~n" mod binding)
+                   #t]
+               [else (printf "Module ~a is missing documentation for ~a~n" mod binding)
+                     #f])]
+        [else
+         (fprintf (current-error-port) "Module ~a does not export ~a~n" mod binding)
+         #f]))
+
+; try-namespace-require : string -> (U 'string 'symbol #f)
+(define (try-namespace-require mod)
+  (let/ec return
+    (with-handlers ([exn:fail? (lambda (e)
+                                 (set! mod (string->symbol mod)))])
+      (namespace-require mod)
+      (return 'string))
+    (with-handlers ([exn:fail? (lambda (e)
+                                 (fprintf (current-error-port) "Module ~a can not be loaded~n" mod)
+                                 (return #f))])
+      (namespace-require mod)
+      (return 'symbol))))
+
 (module+ main
 
   (define binding (make-parameter #f))
@@ -28,41 +66,29 @@
      #:args (file . files)
      (cons file files)))
 
+  ; Loop over all found modules
   (for ([a (in-list args)])
-    (let/ec break
 
-      (with-handlers ([exn:fail? (lambda (e)
-                                   (set! a (string->symbol a)))])
-        (namespace-require a))
-      (with-handlers ([exn:fail? (lambda (e)
-                                   (fprintf (current-error-port) "Module ~a can not be loaded~n" a)
-                                   (error-on-exit? #t)
-                                   (break))])
-        (namespace-require a))
+    ; Determin if module exists
+    (define mod-exists? (try-namespace-require a))
 
+    ; If the module was required a symbol, we must convert `a` to a symbol too.
+    (when (equal? mod-exists? 'symbol)
+      (set! a (string->symbol a)))
+
+    ; If we succeeded in importing the module run the correct operation
+    (when mod-exists?
       (cond [(binding)
-             (cond [(set-member? (module->all-exported-names a) (binding))
-                    (define b* (has-docs? a (binding)))
-                    (cond [b* (printf "Module ~a has documentation for ~a~n" a (binding))]
-                          [else (printf "Module ~a is missing documentation for ~a~n" a (binding))
-                                (error-on-exit? #t)])]
-                   [else
-                    (fprintf (current-error-port) "Module ~a does not export ~a~n" a (binding))
-                    (error-on-exit? #t)])]
+             (when (do-binding! a (binding))
+               (error-on-exit? #t))]
             [(ratio)
              (define r* (module-documentation-ratio a))
-             (printf "Module ~a document aatio: ~a~n" a r*)
+             (printf "Module ~a document ratio: ~a~n" a r*)
              (when (r* . < . (ratio))
                (error-on-exit? #t))]
             [(ignore)
-             (define missing
-               (with-output-to-string
-                 (lambda ()
-                   (parameterize ([current-error-port (current-output-port)])
-                     (check-docs a #:skip (ignore))))))
-             (match missing
-               ["" (printf "Module ~a is documented~n" a)]
-               [else (printf "Module ~a is missing documentation for ~a~n" a missing)])]
+             (when (do-ignore! a (ignore))
+               (error-on-exit? #t))]
             [else
              (define undoc (module->undocumented-exported-names a))
              (cond [(set-empty? undoc)
