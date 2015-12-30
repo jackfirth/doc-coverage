@@ -30,18 +30,18 @@
          (fprintf (current-error-port) "Module ~a does not export ~a~n" mod binding)
          #f]))
 
-; try-namespace-require : string -> (U 'string 'symbol #f)
+; try-namespace-require : string -> (U string symbol #f)
 (define (try-namespace-require mod)
   (let/ec return
     (with-handlers ([exn:fail? (lambda (e)
                                  (set! mod (string->symbol mod)))])
       (namespace-require mod)
-      (return 'string))
+      (return mod))
     (with-handlers ([exn:fail? (lambda (e)
                                  (fprintf (current-error-port) "Module ~a can not be loaded~n" mod)
                                  (return #f))])
       (namespace-require mod)
-      (return 'symbol))))
+      (return mod))))
 
 (module+ main
 
@@ -70,29 +70,25 @@
   (for ([a (in-list args)])
 
     ; Determin if module exists
-    (define mod-exists? (try-namespace-require a))
-
-    ; If the module was required a symbol, we must convert `a` to a symbol too.
-    (when (equal? mod-exists? 'symbol)
-      (set! a (string->symbol a)))
+    (define mod (try-namespace-require a))
 
     ; If we succeeded in importing the module run the correct operation
-    (when mod-exists?
+    (when mod
       (cond [(binding)
-             (when (do-binding! a (binding))
+             (when (do-binding! mod (binding))
                (error-on-exit? #t))]
             [(ratio)
-             (define r* (module-documentation-ratio a))
-             (printf "Module ~a document ratio: ~a~n" a r*)
+             (define r* (module-documentation-ratio mod))
+             (printf "Module ~a document ratio: ~a~n" mod r*)
              (when (r* . < . (ratio))
                (error-on-exit? #t))]
             [(ignore)
-             (when (do-ignore! a (ignore))
+             (when (do-ignore! mod (ignore))
                (error-on-exit? #t))]
             [else
-             (define undoc (module->undocumented-exported-names a))
+             (define undoc (module->undocumented-exported-names mod))
              (cond [(set-empty? undoc)
-                    (printf "Module ~a is completely documented~n" a)]
+                    (printf "Module ~a is completely documented~n" mod)]
                    [else
                     (printf "Module ~a is missing documentation for: ~a~n" a undoc)
                     (error-on-exit? #t)])])))
