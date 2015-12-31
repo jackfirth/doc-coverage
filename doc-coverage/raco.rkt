@@ -5,6 +5,11 @@
          rackunit/docs-complete
          "main.rkt")
 
+(module+ test
+  (require rackunit
+           rackunit/text-ui
+           compiler/find-exe))
+
 ; do-ignore! : (U string symbol) regex -> boolean
 (define (do-ignore! mod ignore)
   (error "Ignore not implemented yet")
@@ -95,3 +100,18 @@
 
   (when (error-on-exit?)
     (exit 1)))
+
+(module+ test
+  (check-equal?
+   (with-output-to-string
+     (lambda () (system* (find-exe) "-l" "raco" "doc-coverage" "racket/base")))
+   "Module racket/base is missing documentation for: (expand-for-clause for-clause-syntax-protect syntax-pattern-variable?)\n")
+  (check-equal?
+   (with-output-to-string
+     (lambda () (system* (find-exe) "-l" "raco" "doc-coverage" "-r" "0.5" "racket/match")))
+   "Module racket/match document ratio: 28/29\n")
+  (check-equal?
+   (with-output-to-string
+     (lambda () (system* (find-exe) "-l" "raco" "doc-coverage" "-b" "match" "racket")))
+   "Module racket has documentation for match\n"))
+
