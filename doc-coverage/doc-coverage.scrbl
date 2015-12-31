@@ -123,3 +123,14 @@ percentage of its exports.
   @examples[#:eval the-eval
     (check-documentation-ratio 'racket/match .99)
 ]}
+
+@section{@tt{raco doc-coverage}: Documentation Coverage}
+
+The @tt{raco doc-coverage} command checks the documentation coverage in
+specific modules.
+
+Command-line flags:
+@itemlist[
+@item{@Flag{h} or @DFlag{help} --- show help information for this command}
+@item{@DFlag{} --- do not treat any remaining arguments as switches}
+]
