@@ -1,6 +1,6 @@
 #lang info
 
-(define name "docs-coverage")
+(define name "doc-coverage")
 (define scribblings '(("doc-coverage.scrbl" ())))
 (define raco-commands
-  '(("cover-doc" (submod doc-coverage/raco main) "a code documentation coverage tool" 25)))
+  '(("doc-coverage" (submod doc-coverage/raco main) "a code documentation coverage tool" 25)))
