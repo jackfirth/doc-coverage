@@ -109,7 +109,9 @@
   (check-equal?
    (with-output-to-string
      (lambda () (system* (find-exe) "-l" "raco" "doc-coverage" "-r" "0.5" "racket/match")))
-   "Module racket/match document ratio: 28/29\n")
+   (format "Module racket/match document ratio: ~a/~a\n"
+           (length (module->documented-exported-names 'racket/match))
+           (length (module->all-exported-names 'racket/match))))
   (check-equal?
    (with-output-to-string
      (lambda () (system* (find-exe) "-l" "raco" "doc-coverage" "-b" "match" "racket")))
