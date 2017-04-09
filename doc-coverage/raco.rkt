@@ -12,16 +12,16 @@
 
 ; do-ignore! : (U string symbol) regex -> boolean
 (define (do-ignore! mod ignore)
-  (error "Ignore not implemented yet")
-  #f
-  #;(define missing
-    (with-output-to-string
-      (lambda ()
-        (parameterize ([current-error-port (current-output-port)])
-          (check-docs mod #:skip ignore)))))
-  #;(match missing
-    ["" (printf "Module ~a is documented~n" a) #t]
-    [else (printf "Module ~a is missing documentation for ~a~n" a missing) #f]))
+  (define undoc
+    (filter-not (λ (name) (regexp-match ignore (symbol->string name)))
+                (module->undocumented-exported-names
+                 (if (symbol? mod) mod (string->symbol mod)))))
+  (cond [(set-empty? undoc)
+         (printf "Module ~a is completely documented~n" mod)
+         #f]
+        [else
+         (printf "Module ~a is missing documentation for: ~a~n" mod undoc)
+         #t]))
 
 ; do-binding! : (U string symbol) symbol -> boolean
 (define (do-binding! mod binding)
@@ -95,7 +95,7 @@
              (cond [(set-empty? undoc)
                     (printf "Module ~a is completely documented~n" mod)]
                    [else
-                    (printf "Module ~a is missing documentation for: ~a~n" a undoc)
+                    (printf "Module ~a is missing documentation for: ~a~n" mod undoc)
                     (error-on-exit? #t)])])))
 
   (when (error-on-exit?)
