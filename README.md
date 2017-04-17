@@ -1,4 +1,4 @@
-doc-coverage [![Build Status](https://travis-ci.org/jackfirth/doc-coverage.svg)](https://travis-ci.org/jackfirth/doc-coverage)
+doc-coverage [![Build Status](https://travis-ci.org/jackfirth/doc-coverage.svg)](https://travis-ci.org/jackfirth/doc-coverage) [![codecov](https://codecov.io/gh/jackfirth/doc-coverage/branch/master/graph/badge.svg)](https://codecov.io/gh/jackfirth/doc-coverage)
 =====================================================
 [Documentation](http://pkg-build.racket-lang.org/doc/doc-coverage/index.html)
 
