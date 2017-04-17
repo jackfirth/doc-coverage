@@ -1,7 +1,2 @@
-**/compiled/*
-**/*.bak
-**/*.html
-**/*.css
-**/*.js
-*~
-\#*
+compiled
+doc

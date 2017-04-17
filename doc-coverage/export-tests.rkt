@@ -1,24 +1,21 @@
 #lang racket
 
-(require "export-lists.rkt"
-         "export-count.rkt"
-         rackunit)
-
 (provide check-all-documented
          check-documented
          check-documentation-ratio)
 
-(define (fail-check-unless cond msg)
+(require "export-lists.rkt"
+         "export-count.rkt"
+         rackunit)
+
+(define-syntax-rule (fail-check-unless cond msg)
   (unless cond (fail-check msg)))
 
 (define-check (check-all-documented module-name)
-  (let* ([undocumented (module->undocumented-exported-names module-name)]
-         [num-undocumented (length undocumented)])
-    (fail-check-unless (zero? num-undocumented)
-      (check-all-documented-message module-name num-undocumented undocumented))))
-
-(module+ test
-  (check-not-exn (thunk check-all-documented 'racket/promise)))
+  (define undocumented (module->undocumented-exported-names module-name))
+  (define num-undocumented (length undocumented))
+  (fail-check-unless (zero? num-undocumented)
+    (check-all-documented-message module-name num-undocumented undocumented)))
 
 (define (check-all-documented-message module-name num-undocumented undocumented)
   (string-append "Module "
@@ -38,9 +35,6 @@
   (fail-check-unless (has-docs? module-name binding)
     (check-documented-message module-name binding)))
 
-(module+ test
-  (check-not-exn (thunk (check-documented 'racket/match 'match))))
-
 (define (check-documented-message module-name binding)
   (string-append "Module "
                  (symbol->string module-name)
@@ -53,9 +47,9 @@
          "Module foo does not document binding foo1"))
 
 (define-check (check-documentation-ratio module-name minimum-ratio)
-  (let ([actual-ratio (module-documentation-ratio module-name)])
-    (fail-check-unless (>= actual-ratio minimum-ratio)
-      (check-documentation-ratio-message module-name minimum-ratio actual-ratio))))
+  (define actual-ratio (module-documentation-ratio module-name))
+  (fail-check-unless (>= actual-ratio minimum-ratio)
+    (check-documentation-ratio-message module-name minimum-ratio actual-ratio)))
 
 (define (check-documentation-ratio-message module-name minimum-ratio actual-ratio)
   (string-append "Module "

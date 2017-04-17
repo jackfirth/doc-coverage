@@ -1,4 +1,4 @@
-doc-coverage [![Build Status](https://travis-ci.org/jackfirth/doc-coverage.svg)](https://travis-ci.org/jackfirth/doc-coverage) [![Coverage Status](https://coveralls.io/repos/jackfirth/doc-coverage/badge.svg)](https://coveralls.io/r/jackfirth/doc-coverage)
+doc-coverage [![Build Status](https://travis-ci.org/jackfirth/doc-coverage.svg)](https://travis-ci.org/jackfirth/doc-coverage)
 =====================================================
 [Documentation](http://pkg-build.racket-lang.org/doc/doc-coverage/index.html)
 
