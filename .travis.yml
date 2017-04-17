@@ -1,24 +1,25 @@
-langauge: c
+language: c
 sudo: false
 env:
   global:
     - RACKET_DIR=~/racket
   matrix:
-    - RACKET_VERSION=6.1.1
-    - RACKET_VERSION=6.2
-    - RACKET_VERSION=6.2.1
-    - RACKET_VERSION=6.3
     - RACKET_VERSION=6.4
     - RACKET_VERSION=6.5
+    - RACKET_VERSION=6.6
+    - RACKET_VERSION=6.7
+    - RACKET_VERSION=6.8
+    - RACKET_VERSION=HEAD
 
 before_install:
   - git clone https://github.com/greghendershott/travis-racket.git ../travis-racket
   - cat ../travis-racket/install-racket.sh | bash
   - export PATH="${RACKET_DIR}/bin:${PATH}"
-  - raco pkg install --deps search-auto cover cover-coveralls
+  - raco pkg install --auto cover cover-codecov doc-coverage
 
-install: raco pkg install --deps search-auto $TRAVIS_BUILD_DIR # install dependencies
+install:
+  - raco pkg install --auto $TRAVIS_BUILD_DIR
 
 script:
- - raco test $TRAVIS_BUILD_DIR # run tests. you wrote tests, right?
- - raco cover -f coveralls -d $TRAVIS_BUILD_DIR/coverage . # generate coverage information for coveralls
+  - raco test -p doc-coverage
+  - raco cover -f codecov -d $TRAVIS_BUILD_DIR/coverage -p doc-coverage
