@@ -5,8 +5,7 @@
          module->undocumented-exported-names
          has-docs?)
 
-(require compose-app/fancy-app
-         scribble/xref
+(require scribble/xref
          setup/xref)
 
 
@@ -18,8 +17,9 @@
 (define (has-docs? mod binding)
   (and (xref-mod+binding->definition-tag mod binding) #t))
 
-(define phase-exports->names
-  (map first _ .. apply append _ .. map (drop _ 1) _))
+(define (phase-exports->names exports)
+  (map first
+       (apply append (map (curryr drop 1) exports))))
 
 (define (module->all-exported-names mod)
   (let-values ([(exp-values exp-syntax) (module->exports mod)])
@@ -27,8 +27,8 @@
             (phase-exports->names exp-syntax))))
 
 (define (module->documented-exported-names mod)
-  (filter (has-docs? mod _) (module->all-exported-names mod)))
+  (filter (curry has-docs? mod) (module->all-exported-names mod)))
 
 (define (module->undocumented-exported-names mod)
-  (filter-not (has-docs? mod _)
+  (filter-not (curry has-docs? mod)
               (module->all-exported-names mod)))

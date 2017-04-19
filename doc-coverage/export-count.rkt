@@ -5,16 +5,15 @@
          module-num-undocumented-exports
          module-documentation-ratio)
 
-(require compose-app
-         "export-lists.rkt")
+(require "export-lists.rkt")
 
-(define module-num-exports (length .. module->all-exported-names))
+(define module-num-exports (compose length module->all-exported-names))
 
 (define module-num-documented-exports
-  (length .. module->documented-exported-names))
+  (compose length module->documented-exported-names))
 
 (define module-num-undocumented-exports
-  (length .. module->undocumented-exported-names))
+  (compose length module->undocumented-exported-names))
 
 (define (module-documentation-ratio mod)
   (/ (module-num-documented-exports mod)
