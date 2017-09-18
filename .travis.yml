@@ -19,7 +19,7 @@ before_install:
   - raco pkg install --auto cover cover-codecov
 
 install:
-  - raco pkg install --auto $TRAVIS_BUILD_DIR
+  - raco pkg install --auto $TRAVIS_BUILD_DIR/doc-coverage
 
 script:
   - raco test -p doc-coverage
