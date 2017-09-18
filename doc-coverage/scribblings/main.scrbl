@@ -13,7 +13,7 @@
 
 @author[@author+email["Jack Firth" "jackhfirth@gmail.com"]]
 
-This library provides functions for inspecting the number of 
+This library provides functions for inspecting the number of
 bindings a module exports with and without corresponding
 Scribble documentation, as well as Rackunit tests based on
 this information. This allows a module author to enforce in
