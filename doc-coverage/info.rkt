@@ -4,7 +4,7 @@
 (define collection "doc-coverage")
 
 (define deps
-  '(("base" #:version "6.4")
+  '(("base" #:version "6.3")
     "racket-index"
     "rackunit-lib"
     "reprovide-lang"
