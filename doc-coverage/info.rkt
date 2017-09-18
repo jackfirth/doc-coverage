@@ -15,7 +15,7 @@
     "racket-doc"
     "rackunit-lib"))
 
-(define scribblings '(("scribbligs/main.scrbl" () (library) "doc-coverage")))
+(define scribblings '(("scribblings/main.scrbl" () (library) "doc-coverage")))
 
 (define raco-commands
   '(("doc-coverage" (submod doc-coverage/private/raco main)
