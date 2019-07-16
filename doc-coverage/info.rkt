@@ -7,7 +7,7 @@
   '(("base" #:version "6.3")
     "racket-index"
     "rackunit-lib"
-    "reprovide-lang"
+    "reprovide-lang-lib"
     "scribble-lib"))
 
 (define build-deps
