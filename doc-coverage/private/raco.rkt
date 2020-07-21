@@ -105,7 +105,7 @@
   (check-equal?
    (with-output-to-string
      (lambda () (system* (find-exe) "-l" "raco" "doc-coverage" "racket/base")))
-   "Module racket/base is missing documentation for: (expand-for-clause for-clause-syntax-protect syntax-pattern-variable?)\n")
+   "Module racket/base is missing documentation for: (for-clause-syntax-protect syntax-pattern-variable?)\n")
   (check-equal?
    (with-output-to-string
      (lambda () (system* (find-exe) "-l" "raco" "doc-coverage" "-r" "0.5" "racket/match")))
